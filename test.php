@@ -1,2 +1,2 @@
 <?php
-是的发售地方
+echo "asdfasdf";
