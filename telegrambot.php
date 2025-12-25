@@ -1,13 +1,15 @@
 <?php
 
-// ===== 基础配置 =====
-$botToken = 'xxxx';
-$apiUrl = "https://api.telegram.org/bot{$botToken}/";
+// ===== 加载配置 =====
+$config = require __DIR__ . '/config.php';
 
-// 读取 Telegram 发送的数据
+$botToken = $config['bot_token'];
+$apiUrl   = "https://api.telegram.org/bot{$botToken}/";
+
+// ===== 读取 Telegram 数据 =====
 $update = json_decode(file_get_contents('php://input'), true);
 
-// 发送消息函数
+// ===== 发送消息函数 =====
 function sendMessage($chatId, $text, $replyMarkup = null)
 {
     global $apiUrl;
@@ -25,7 +27,7 @@ function sendMessage($chatId, $text, $replyMarkup = null)
     file_get_contents($apiUrl . 'sendMessage?' . http_build_query($data));
 }
 
-// ===== 处理消息 =====
+// ===== 处理普通消息 =====
 if (isset($update['message'])) {
 
     $chatId = $update['message']['chat']['id'];
@@ -38,7 +40,7 @@ if (isset($update['message'])) {
                 ['text' => '📞 联系我们', 'callback_data' => 'contact_us'],
             ],
             [
-                ['text' => '🌐 前往官网', 'url' => 'https://www.gasstation.ai']
+                ['text' => '🌐 前往官网', 'url' => $config['website_url']]
             ]
         ]
     ];
@@ -62,7 +64,7 @@ if (isset($update['callback_query'])) {
     if ($data === 'contact_us') {
         sendMessage(
             $chatId,
-            "📩 联系我们方式：\n\nTelegram：@Gasstationai"
+            "📩 联系我们方式：\n\nTelegram：{$config['contact_telegram']}"
         );
     }
 }

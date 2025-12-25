@@ -1,2 +1,2 @@
 <?php
-echo "asdfasdf";
+echo "你好！";
